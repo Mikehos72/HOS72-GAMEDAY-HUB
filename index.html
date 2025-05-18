@@ -34,12 +34,6 @@
       border-radius: 16px;
       box-shadow: 0 0 12px rgba(0,0,0,0.6);
     }
-    .music-btn img {
-      height: 250px;
-      width: auto;
-      border-radius: 16px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.6);
-    }
     .touchdown-btn,
     .music-btn {
       background: none;
@@ -52,14 +46,10 @@
 <body>
   <h1>Hos Family Faithful Game Hub</h1>
   <audio id="foghorn" src="foghorn.mp3" preload="auto"></audio>
-  <audio id="hype" src="hypesong.mp3" preload="auto"></audio>
 
   <div class="button-row">
     <button class="touchdown-btn" onclick="playFoghornAndFlashLights()">
       <img src="touchdown.png" alt="Touchdown Button" />
-    </button>
-    <button class="music-btn" onclick="document.getElementById('hype').play()">
-      <img src="music.jpeg" alt="Pre-Game Hype Song" />
     </button>
   </div>
 
