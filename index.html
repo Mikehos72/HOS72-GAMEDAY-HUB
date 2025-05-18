@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hos Family Faithful Game Hub</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: url('background1.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      color: #f0f0f0;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 4em;
+      margin: 20px auto;
+      text-align: center;
+    }
+    .button-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      padding: 20px;
+      height: calc(100% - 100px);
+      flex-wrap: wrap;
+    }
+    .touchdown-btn img,
+    .music-btn img {
+      height: 80vh;
+      max-height: 80vh;
+      width: auto;
+      max-width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+    .touchdown-btn,
+    .music-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hos Family Faithful Game Hub</h1>
+  <audio id="foghorn" src="foghorn.mp3" preload="auto"></audio>
+  <audio id="hype" src="hypesong.mp3" preload="auto"></audio>
+
+  <div class="button-row">
+    <button class="touchdown-btn" onclick="playFoghornAndFlashLights()">
+      <img src="touchdown.png" alt="Touchdown Button" />
+    </button>
+    <button class="music-btn" onclick="document.getElementById('hype').play()">
+      <img src="music.jpeg" alt="Pre-Game Hype Song" />
+    </button>
+  </div>
+
+  <script>
+    async function playFoghornAndFlashLights() {
+      document.getElementById('foghorn').play();
+      await triggerGoveeColor(255, 0, 0); // Red
+      setTimeout(() => {
+        triggerGoveeColor(255, 215, 0); // Gold
+      }, 1000);
+    }
+
+    async function triggerGoveeColor(r, g, b) {
+      const apiKey = "f78b635d-28de-46d5-adaf-37aab5d8e7a3";
+      const devices = [
+        { device: "D0:C9:07:65:6F:F4", model: "H61B5" },
+        { device: "D0:C9:07:F5:6C:E8", model: "H61E6" },
+        { device: "D0:C9:07:BB:D7:CA", model: "H6088" },
+        { device: "D4:AD:FC:A0:38:B7", model: "H605C" }
+      ];
+
+      const flashDuration = 10000;
+      const interval = 500;
+      const startTime = Date.now();
+      let flashState = true;
+
+      const intervalId = setInterval(async () => {
+        const color = flashState ? { r, g, b } : { r: 0, g: 0, b: 0 };
+        flashState = !flashState;
+
+        for (const d of devices) {
+          await fetch("https://developer-api.govee.com/v1/devices/control", {
+            method: "PUT",
+            headers: {
+              "Govee-API-Key": apiKey,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              device: d.device,
+              model: d.model,
+              cmd: {
+                name: "color",
+                value: color
+              }
+            })
+          });
+        }
+
+        if (Date.now() - startTime >= flashDuration) {
+          clearInterval(intervalId);
+        }
+      }, interval);
+    }
+  </script>
+</body>
+</html>
