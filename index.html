@@ -77,7 +77,25 @@
 </head>
 <body>
   <h1>HOS' FAITHFUL GAMEDAY HUB</h1>
+  <button onclick="touchdown()">🏈 Touchdown</button>
   <audio id="foghorn" src="foghorn.mp3" preload="auto"></audio>
+
+  <script>
+  async function touchdown() {
+    // Play foghorn sound
+    const foghorn = document.getElementById("foghorn");
+    foghorn.currentTime = 0;
+    foghorn.play();
+
+    // Flash red and gold lights
+    for (let i = 0; i < 3; i++) {
+      await controlLight("color", { r: 255, g: 0, b: 0 }); // Red
+      await new Promise(r => setTimeout(r, 500));
+      await controlLight("color", { r: 255, g: 215, b: 0 }); // Gold
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
+</script>
 
   <div class="button-row">
     <button class="touchdown-btn" onclick="playFoghornAndFlashLights()">
