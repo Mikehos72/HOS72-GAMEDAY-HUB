@@ -1,0 +1,7 @@
+[build]
+  command = ""
+  publish = "."
+  functions = "netlify/functions"
+
+[context.production.environment]
+  GOVEE_API_KEY = "f78b635d-28de-46d5-adaf-37aab5d8e7a3"
