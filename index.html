@@ -148,5 +148,39 @@
       }, interval);
     }
   </script>
+<hr>
+
+<button onclick="setRed()">🔴 Set Lights to Red</button>
+<button onclick="turnOff()">💡 Turn Off Lights</button>
+<button onclick="flashRedGold()">✨ Flash Red & Gold</button>
+
+<script>
+  async function controlLight(action, color = null) {
+    const res = await fetch("/.netlify/functions/lights", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, color })
+    });
+    const result = await res.json();
+    console.log("Govee API response:", result);
+  }
+
+  function setRed() {
+    controlLight("color", { r: 255, g: 0, b: 0 });
+  }
+
+  function turnOff() {
+    controlLight("off");
+  }
+
+  async function flashRedGold() {
+    for (let i = 0; i < 3; i++) {
+      await controlLight("color", { r: 255, g: 0, b: 0 }); // Red
+      await new Promise(r => setTimeout(r, 500));
+      await controlLight("color", { r: 255, g: 215, b: 0 }); // Gold
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
+</script>
 </body>
 </html>
